@@ -4,6 +4,7 @@ An interactive, browser-based learning sandbox for orbital mechanics. Tweak the 
 
 **Live prototype:** `https://<your-username>.github.io/<repo-name>/`
 **Design system:** `https://<your-username>.github.io/<repo-name>/design-system/`
+**Token reference:** `https://<your-username>.github.io/<repo-name>/design-system/tokens.html`
 
 > Prototype v0.1. No build step, no framework, no dependencies to install for the site itself. Plain HTML, CSS and JavaScript plus three.js from a CDN. All images are hosted in the repo.
 
@@ -38,20 +39,23 @@ If the trajectory intersects Earth's surface, the simulation stops and flags an 
 .
 ├── index.html                  # The prototype
 ├── design-system/
-│   └── index.html              # Living design-system docs (reads tokens.json)
+│   ├── index.html              # Design guide: theme, color, type, spacing, components
+│   └── tokens.html             # Token reference, auto-built from tokens.json
 ├── assets/
 │   ├── css/
 │   │   ├── tokens.css          # ⚠️ GENERATED from tokens/tokens.json. Do not edit
 │   │   ├── main.css            # Prototype styles
 │   │   ├── loader.css          # Page loader styles
-│   │   └── design-system.css   # Design-system page styles
+│   │   ├── design-system-guide.css  # Design guide page styles
+│   │   └── design-system.css   # Token reference page styles
 │   ├── img/
 │   │   ├── earth-texture.png   # Equirectangular Earth map (2:1), globe + ground track
 │   │   └── moon-texture.png    # Equirectangular Moon map (2:1)
 │   └── js/
 │       ├── main.js             # Simulation, rendering, UI wiring
 │       ├── loader.js           # Page loader (percentage counter)
-│       └── design-system.js    # Renders tokens.json into the docs page
+│       ├── design-system-guide.js   # Fills live token values into the guide
+│       └── design-system.js    # Renders tokens.json into the token reference
 ├── tokens/
 │   └── tokens.json             # ✅ Source of truth for all design tokens
 ├── scripts/
@@ -74,7 +78,7 @@ cd <repo-name>
 npm start            # serves the repo at http://localhost:3000
 ```
 
-Any static server works (`python3 -m http.server`, VS Code Live Server, and so on). Opening `index.html` directly from disk will run the prototype, but the design-system page needs a server because it uses `fetch()` to load `tokens.json`.
+Any static server works (`python3 -m http.server`, VS Code Live Server, and so on). Opening `index.html` directly from disk will run the prototype, but the token reference page needs a server because it uses `fetch()` to load `tokens.json`.
 
 Requirements: a modern browser with WebGL, and Node 18.11+ if you want to run the token scripts.
 
@@ -98,7 +102,7 @@ The file follows the [W3C Design Tokens (DTCG)](https://www.designtokens.org/) f
 
 - Any object with a `$value` is a token; anything else is a group.
 - `$type` is inherited from the nearest parent group.
-- `$description` is optional and shows up on the design-system page.
+- `$description` is optional and shows up on the token reference page.
 
 ```json
 "color": {
@@ -154,6 +158,10 @@ The build fails with a clear message on unknown references, circular references 
 4. Commit **both** `tokens.json` and the regenerated `tokens.css`.
 
 The deploy workflow rebuilds tokens anyway, but committing the generated file keeps the repo working when it's opened locally or served without CI. The PR check will flag it if they drift.
+
+### Design system pages
+
+Both design-system pages read from the same source. The **design guide** (`design-system/index.html`) is hand-written: theme principles, usage samples and component demos. Any element with `data-token="--name"` has its displayed value filled in from `tokens.css` at load time, so the numbers on the page always match the JSON. The **token reference** (`design-system/tokens.html`) is fully automatic and lists every token in `tokens.json`. When you add a token, it appears in the reference immediately; add it to the guide only if it needs a usage example.
 
 ### Using tokens in JavaScript
 

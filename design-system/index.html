@@ -4,24 +4,283 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Design System — Orbital Trajectory Sandbox</title>
+  <meta name="description" content="Theme, color, typography, spacing and UI components for the Orbital Trajectory Learning Sandbox.">
   <link rel="stylesheet" href="../assets/css/tokens.css">
-  <link rel="stylesheet" href="../assets/css/design-system.css">
+  <link rel="stylesheet" href="../assets/css/design-system-guide.css">
 </head>
 <body>
-  <header class="ds-header">
-    <div>
-      <p class="ds-eyebrow">Orbital Trajectory Sandbox</p>
-      <h1>Design System</h1>
-      <p class="ds-lede">Every value below is read live from <code>tokens/tokens.json</code>. Click any token to copy its CSS variable.</p>
-    </div>
-    <nav class="ds-nav">
-      <a href="../">← Prototype</a>
-      <a href="../tokens/tokens.json">tokens.json</a>
-      <a href="../assets/css/tokens.css">tokens.css</a>
-    </nav>
+
+  <nav class="page-nav" aria-label="Site">
+    <a href="../">← Prototype</a>
+    <a href="tokens.html">Token reference</a>
+    <a href="../tokens/tokens.json">tokens.json</a>
+  </nav>
+
+  <header class="page-header">
+    <h1>Orbital Trajectory Sandbox — Design System</h1>
+    <p>Reference documentation for the theme, color palette, typography, and UI components used to build the Orbital Trajectory Learning Sandbox prototype. High-contrast, monochrome, glass-panel aesthetic inspired by mission-control / orbital-schematic instrumentation. Every value below is a named token. The same names and values are shared with the prototype's CSS through <code>assets/css/tokens.css</code>, which is generated from <code>tokens/tokens.json</code> (W3C design-tokens format, importable into Figma via Tokens Studio).</p>
+    <span class="tag">v1.1 · values read live from tokens.css</span>
   </header>
-  <main id="ds-root"><p class="ds-muted">Loading tokens…</p></main>
-  <div id="ds-toast" role="status" aria-live="polite"></div>
-  <script src="../assets/js/design-system.js"></script>
+
+  <main>
+
+  <!-- THEME -->
+  <section>
+    <h2>Theme</h2>
+    <p class="desc">The visual language treats the interface as instrument overlays floating above a live 3D scene: near-black backgrounds, thin hairline borders, frosted-glass panels, and sparing use of color so data — not chrome — draws the eye.</p>
+    <div class="grid cols-2">
+      <div class="principle">
+        <h3>Monochrome, high contrast</h3>
+        <p>Nearly everything is white, grey, or black. Line weight, opacity, and stroke style (solid / dashed / dotted) carry meaning instead of hue.</p>
+      </div>
+      <div class="principle">
+        <h3>One accent color</h3>
+        <p>Red (<code>--color-accent</code> · <span data-token="--color-accent">#ff4d4d</span>) is reserved exclusively for critical or live-dynamic data — impact/crash states, the velocity vector, and ground-track markers.</p>
+      </div>
+      <div class="principle">
+        <h3>Glassmorphism panels</h3>
+        <p>Controls float in translucent, blurred cards (<code>backdrop-filter: blur()</code>) rather than opaque sidebars, keeping the 3D scene visible underneath at all times.</p>
+      </div>
+      <div class="principle">
+        <h3>Progressive disclosure</h3>
+        <p>Every panel section is a native <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> so users can collapse what they don't need — no custom JS accordion required.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLOR -->
+  <section>
+    <h2>Color</h2>
+    <p class="desc">Every color used anywhere in the prototype, defined once as a CSS custom property and reused everywhere. Matches the <code>color</code> group in <code>tokens/tokens.json</code>.</p>
+    <div class="grid cols-4">
+      <div class="swatch"><div class="fill" style="background:var(--color-bg);"></div>
+        <div class="meta"><div class="name">color-bg</div><div class="val" data-token="--color-bg">#000000</div></div></div>
+      <div class="swatch"><div class="fill" style="background:var(--color-white);"></div>
+        <div class="meta"><div class="name">color-white</div><div class="val" data-token="--color-white">#ffffff</div></div></div>
+      <div class="swatch"><div class="fill" style="background:var(--color-text);"></div>
+        <div class="meta"><div class="name">color-text</div><div class="val" data-token="--color-text">#f4f4f4</div></div></div>
+      <div class="swatch"><div class="fill" style="background:var(--color-muted);"></div>
+        <div class="meta"><div class="name">color-muted</div><div class="val" data-token="--color-muted">#8f8f8f</div></div></div>
+      <div class="swatch"><div class="fill" style="background:var(--color-subtle);"></div>
+        <div class="meta"><div class="name">color-subtle</div><div class="val" data-token="--color-subtle">#555555</div></div></div>
+      <div class="swatch"><div class="fill" style="background:var(--color-pane-border);"></div>
+        <div class="meta"><div class="name">color-pane-border</div><div class="val" data-token="--color-pane-border">#1a1a1a</div></div></div>
+      <div class="swatch"><div class="fill" style="background:var(--color-accent);"></div>
+        <div class="meta"><div class="name">color-accent</div><div class="val" data-token="--color-accent">#ff4d4d</div></div></div>
+      <div class="swatch"><div class="fill checker"><span style="background:var(--color-accent-border);"></span></div>
+        <div class="meta"><div class="name">color-accent-border</div><div class="val" data-token="--color-accent-border">rgba(255,77,77,0.6)</div></div></div>
+      <div class="swatch"><div class="fill checker"><span style="background:var(--color-accent-soft);"></span></div>
+        <div class="meta"><div class="name">color-accent-soft</div><div class="val" data-token="--color-accent-soft">rgba(255,77,77,0.15)</div></div></div>
+      <div class="swatch"><div class="fill" style="background:var(--color-accent-text);"></div>
+        <div class="meta"><div class="name">color-accent-text</div><div class="val" data-token="--color-accent-text">#ffb3b3</div></div></div>
+      <div class="swatch"><div class="fill checker"><span style="background:var(--color-line);"></span></div>
+        <div class="meta"><div class="name">color-line</div><div class="val" data-token="--color-line">rgba(255,255,255,0.22)</div></div></div>
+      <div class="swatch"><div class="fill checker"><span style="background:var(--color-line-strong);"></span></div>
+        <div class="meta"><div class="name">color-line-strong</div><div class="val" data-token="--color-line-strong">rgba(255,255,255,0.55)</div></div></div>
+      <div class="swatch"><div class="fill checker"><span style="background:var(--color-glass);"></span></div>
+        <div class="meta"><div class="name">color-glass</div><div class="val" data-token="--color-glass">rgba(255,255,255,0.05)</div></div></div>
+      <div class="swatch"><div class="fill checker"><span style="background:var(--color-glass-faint);"></span></div>
+        <div class="meta"><div class="name">color-glass-faint</div><div class="val" data-token="--color-glass-faint">rgba(255,255,255,0.06)</div></div></div>
+      <div class="swatch"><div class="fill checker"><span style="background:var(--color-glass-strong);"></span></div>
+        <div class="meta"><div class="name">color-glass-strong</div><div class="val" data-token="--color-glass-strong">rgba(255,255,255,0.08)</div></div></div>
+      <div class="swatch"><div class="fill checker"><span style="background:var(--color-glass-hover);"></span></div>
+        <div class="meta"><div class="name">color-glass-hover</div><div class="val" data-token="--color-glass-hover">rgba(255,255,255,0.14)</div></div></div>
+      <div class="swatch"><div class="fill" style="background:var(--color-button-primary-hover);"></div>
+        <div class="meta"><div class="name">color-button-primary-hover</div><div class="val" data-token="--color-button-primary-hover">#e2e2e2</div></div></div>
+      <div class="swatch"><div class="fill" style="background:var(--color-loader-bg);"></div>
+        <div class="meta"><div class="name">color-loader-bg</div><div class="val" data-token="--color-loader-bg">#0d0d0d</div></div></div>
+    </div>
+  </section>
+
+  <!-- TYPOGRAPHY -->
+  <section>
+    <h2>Typography</h2>
+    <p class="desc">System font stack — no webfont loading required. <code>--font-family-base: <span data-token="--font-family-base">'Segoe UI', Roboto, Arial, sans-serif</span>;</code> Sizes, weights, and letter-spacing are all tokenized; the full ramp is listed after the usage samples.</p>
+    <div class="card">
+      <div class="type-row"><div class="type-sample t-h1">Orbital Trajectory Sandbox</div><div class="type-meta">font-size-16 · weight-semibold · letter-spacing-0-5</div></div>
+      <div class="type-row"><div class="type-sample t-panel-title">Panel Title / Section Summary</div><div class="type-meta">font-size-11 · uppercase · letter-spacing-1-5</div></div>
+      <div class="type-row"><div class="type-sample t-label">Slider label &amp; body text</div><div class="type-meta">font-size-12-5 · weight-regular</div></div>
+      <div class="type-row"><div class="type-sample t-tele">Telemetry row value — 7.67 km/s</div><div class="type-meta">font-size-12 · tabular-nums</div></div>
+      <div class="type-row"><div class="type-sample t-hint">Helper / hint text under a control</div><div class="type-meta">font-size-10-5 · color-muted</div></div>
+      <div class="type-row"><div class="type-sample t-footer">Footer / fine print</div><div class="type-meta">font-size-10 · color-subtle</div></div>
+    </div>
+    <p class="desc desc--after">Full font-size ramp, named by pixel value (matches <code>font.size</code> in the JSON).</p>
+    <div class="card">
+      <div class="strip-row"><div class="strip-swatch" style="width:var(--font-size-9);height:var(--font-size-9);"></div><div class="strip-name">font-size-9</div><div class="strip-val"><span data-token="--font-size-9">9px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch" style="width:var(--font-size-10);height:var(--font-size-10);"></div><div class="strip-name">font-size-10</div><div class="strip-val"><span data-token="--font-size-10">10px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch" style="width:var(--font-size-10-5);height:var(--font-size-10-5);"></div><div class="strip-name">font-size-10-5</div><div class="strip-val"><span data-token="--font-size-10-5">10.5px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch" style="width:var(--font-size-11);height:var(--font-size-11);"></div><div class="strip-name">font-size-11</div><div class="strip-val"><span data-token="--font-size-11">11px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch" style="width:var(--font-size-11-5);height:var(--font-size-11-5);"></div><div class="strip-name">font-size-11-5</div><div class="strip-val"><span data-token="--font-size-11-5">11.5px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch" style="width:var(--font-size-12);height:var(--font-size-12);"></div><div class="strip-name">font-size-12</div><div class="strip-val"><span data-token="--font-size-12">12px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch" style="width:var(--font-size-12-5);height:var(--font-size-12-5);"></div><div class="strip-name">font-size-12-5</div><div class="strip-val"><span data-token="--font-size-12-5">12.5px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch" style="width:var(--font-size-13);height:var(--font-size-13);"></div><div class="strip-name">font-size-13</div><div class="strip-val"><span data-token="--font-size-13">13px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch" style="width:var(--font-size-16);height:var(--font-size-16);"></div><div class="strip-name">font-size-16</div><div class="strip-val"><span data-token="--font-size-16">16px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch" style="width:var(--font-size-24);height:var(--font-size-24);"></div><div class="strip-name">font-size-24</div><div class="strip-val"><span data-token="--font-size-24">24px</span></div></div>
+    </div>
+    <p class="desc desc--after">Weights, letter-spacing, and line-height tokens.</p>
+    <div class="grid cols-3">
+      <div class="card"><div class="demo-label">Font weight</div>
+        <div class="strip-row"><div class="strip-name" style="font-weight:var(--font-weight-regular);">Regular</div><div class="strip-val">weight-regular · <span data-token="--font-weight-regular">400</span></div></div>
+        <div class="strip-row"><div class="strip-name" style="font-weight:var(--font-weight-semibold);">Semibold</div><div class="strip-val">weight-semibold · <span data-token="--font-weight-semibold">600</span></div></div>
+        <div class="strip-row"><div class="strip-name" style="font-weight:var(--font-weight-bold);">Bold</div><div class="strip-val">weight-bold · <span data-token="--font-weight-bold">700</span></div></div>
+      </div>
+      <div class="card"><div class="demo-label">Letter spacing</div>
+        <div class="strip-row"><div class="strip-name">letter-spacing-0</div><div class="strip-val"><span data-token="--letter-spacing-0">0</span></div></div>
+        <div class="strip-row"><div class="strip-name">letter-spacing-0-5</div><div class="strip-val"><span data-token="--letter-spacing-0-5">0.5px</span></div></div>
+        <div class="strip-row"><div class="strip-name">letter-spacing-0-8</div><div class="strip-val"><span data-token="--letter-spacing-0-8">0.8px</span></div></div>
+        <div class="strip-row"><div class="strip-name">letter-spacing-1-2</div><div class="strip-val"><span data-token="--letter-spacing-1-2">1.2px</span></div></div>
+        <div class="strip-row"><div class="strip-name">letter-spacing-1-5</div><div class="strip-val"><span data-token="--letter-spacing-1-5">1.5px</span></div></div>
+        <div class="strip-row"><div class="strip-name">letter-spacing-2</div><div class="strip-val"><span data-token="--letter-spacing-2">2px</span></div></div>
+      </div>
+      <div class="card"><div class="demo-label">Line height</div>
+        <div class="strip-row"><div class="strip-name">line-height-1-3</div><div class="strip-val"><span data-token="--line-height-1-3">1.3</span></div></div>
+        <div class="strip-row"><div class="strip-name">line-height-1-5</div><div class="strip-val"><span data-token="--line-height-1-5">1.5</span></div></div>
+        <div class="strip-row"><div class="strip-name">line-height-1-55</div><div class="strip-val"><span data-token="--line-height-1-55">1.55</span></div></div>
+        <div class="strip-row"><div class="strip-name">line-height-1-6</div><div class="strip-val"><span data-token="--line-height-1-6">1.6</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPACING -->
+  <section>
+    <h2>Spacing</h2>
+    <p class="desc">Every padding, margin, and gap in the prototype, named by its pixel value rather than snapped to an idealized scale — this keeps the exact spacing already used, just made reusable and consistent across files.</p>
+    <div class="card">
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-1);"></div><div class="strip-name">space-1</div><div class="strip-val"><span data-token="--space-1">1px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-2);"></div><div class="strip-name">space-2</div><div class="strip-val"><span data-token="--space-2">2px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-3);"></div><div class="strip-name">space-3</div><div class="strip-val"><span data-token="--space-3">3px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-4);"></div><div class="strip-name">space-4</div><div class="strip-val"><span data-token="--space-4">4px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-5);"></div><div class="strip-name">space-5</div><div class="strip-val"><span data-token="--space-5">5px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-6);"></div><div class="strip-name">space-6</div><div class="strip-val"><span data-token="--space-6">6px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-7);"></div><div class="strip-name">space-7</div><div class="strip-val"><span data-token="--space-7">7px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-8);"></div><div class="strip-name">space-8</div><div class="strip-val"><span data-token="--space-8">8px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-10);"></div><div class="strip-name">space-10</div><div class="strip-val"><span data-token="--space-10">10px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-12);"></div><div class="strip-name">space-12</div><div class="strip-val"><span data-token="--space-12">12px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-14);"></div><div class="strip-name">space-14</div><div class="strip-val"><span data-token="--space-14">14px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-16);"></div><div class="strip-name">space-16</div><div class="strip-val"><span data-token="--space-16">16px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-18);"></div><div class="strip-name">space-18</div><div class="strip-val"><span data-token="--space-18">18px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-20);"></div><div class="strip-name">space-20</div><div class="strip-val"><span data-token="--space-20">20px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-22);"></div><div class="strip-name">space-22</div><div class="strip-val"><span data-token="--space-22">22px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-24);"></div><div class="strip-name">space-24</div><div class="strip-val"><span data-token="--space-24">24px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-36);"></div><div class="strip-name">space-36</div><div class="strip-val"><span data-token="--space-36">36px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-48);"></div><div class="strip-name">space-48</div><div class="strip-val"><span data-token="--space-48">48px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-56);"></div><div class="strip-name">space-56</div><div class="strip-val"><span data-token="--space-56">56px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-100);"></div><div class="strip-name">space-100</div><div class="strip-val"><span data-token="--space-100">100px</span></div></div>
+    </div>
+  </section>
+
+  <!-- RADIUS & EFFECTS -->
+  <section>
+    <h2>Radius &amp; Effects</h2>
+    <p class="desc">Corner radii, blur amounts, border weights, transition durations, and shadows used across panels, chips, and controls.</p>
+    <div class="grid cols-2">
+      <div class="card">
+        <div class="demo-label">Radius</div>
+        <div class="strip-row"><div class="strip-swatch strip-swatch--radius" style="border-radius:var(--radius-3);"></div><div class="strip-name">radius-3</div><div class="strip-val"><span data-token="--radius-3">3px</span></div></div>
+        <div class="strip-row"><div class="strip-swatch strip-swatch--radius" style="border-radius:var(--radius-4);"></div><div class="strip-name">radius-4</div><div class="strip-val"><span data-token="--radius-4">4px</span></div></div>
+        <div class="strip-row"><div class="strip-swatch strip-swatch--radius" style="border-radius:var(--radius-8);"></div><div class="strip-name">radius-8</div><div class="strip-val"><span data-token="--radius-8">8px</span></div></div>
+        <div class="strip-row"><div class="strip-swatch strip-swatch--radius" style="border-radius:var(--radius-10);"></div><div class="strip-name">radius-10</div><div class="strip-val"><span data-token="--radius-10">10px</span></div></div>
+        <div class="strip-row"><div class="strip-swatch strip-swatch--radius" style="border-radius:var(--radius-12);"></div><div class="strip-name">radius-12</div><div class="strip-val"><span data-token="--radius-12">12px</span></div></div>
+        <div class="strip-row"><div class="strip-swatch strip-swatch--radius" style="border-radius:var(--radius-14);"></div><div class="strip-name">radius-14</div><div class="strip-val"><span data-token="--radius-14">14px</span></div></div>
+        <div class="strip-row"><div class="strip-swatch strip-swatch--radius" style="border-radius:var(--radius-18);"></div><div class="strip-name">radius-18</div><div class="strip-val"><span data-token="--radius-18">18px</span></div></div>
+        <div class="strip-row"><div class="strip-swatch strip-swatch--radius" style="border-radius:var(--radius-20);"></div><div class="strip-name">radius-20</div><div class="strip-val"><span data-token="--radius-20">20px</span> · pill</div></div>
+        <div class="strip-row"><div class="strip-swatch strip-swatch--radius" style="border-radius:var(--radius-round);"></div><div class="strip-name">radius-round</div><div class="strip-val"><span data-token="--radius-round">50%</span></div></div>
+      </div>
+      <div class="card">
+        <div class="demo-label">Blur / border / duration / shadow</div>
+        <div class="strip-row"><div class="strip-name">blur-10</div><div class="strip-val"><span data-token="--blur-10">10px</span> backdrop-filter</div></div>
+        <div class="strip-row"><div class="strip-name">blur-16</div><div class="strip-val"><span data-token="--blur-16">16px</span> backdrop-filter</div></div>
+        <div class="strip-row"><div class="strip-name">blur-22</div><div class="strip-val"><span data-token="--blur-22">22px</span> backdrop-filter</div></div>
+        <div class="strip-row"><div class="strip-name">saturate-panel</div><div class="strip-val"><span data-token="--saturate-panel">160%</span></div></div>
+        <div class="strip-row"><div class="strip-name">border-width-1</div><div class="strip-val"><span data-token="--border-width-1">1px</span></div></div>
+        <div class="strip-row"><div class="strip-name">border-width-1-5</div><div class="strip-val"><span data-token="--border-width-1-5">1.5px</span></div></div>
+        <div class="strip-row"><div class="strip-name">duration-fast</div><div class="strip-val"><span data-token="--duration-fast">0.15s</span></div></div>
+        <div class="strip-row"><div class="strip-name">duration-base</div><div class="strip-val"><span data-token="--duration-base">0.18s</span></div></div>
+        <div class="strip-row"><div class="strip-name">duration-slow</div><div class="strip-val"><span data-token="--duration-slow">0.5s</span></div></div>
+        <div class="strip-row"><div class="strip-name">shadow-panel</div><div class="strip-val"><span data-token="--shadow-panel">0 20px 60px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06)</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPONENTS -->
+  <section>
+    <h2>Components</h2>
+
+    <p class="desc">Buttons — pill-shaped, transparent by default. Three variants layered on the same base class.</p>
+    <div class="demo">
+      <div class="row">
+        <button type="button">Default</button>
+        <button type="button" class="primary">▶ Primary</button>
+        <button type="button" class="danger">⏹ Danger</button>
+      </div>
+    </div>
+
+    <p class="desc desc--component">Slider control — native range input, white accent, value shown inline in the label.</p>
+    <div class="demo">
+      <div class="ctrl ctrl--demo">
+        <label><span>Eccentricity (e) <span class="info" title="Example tooltip">i</span></span><span class="val" id="demoEccVal">0.30</span></label>
+        <input type="range" id="demoEcc" min="0" max="0.95" step="0.01" value="0.3" aria-label="Eccentricity">
+      </div>
+    </div>
+
+    <p class="desc desc--component">Toggle checkbox &amp; info tooltip icon.</p>
+    <div class="demo">
+      <div class="row row--gap-22">
+        <div class="toggle-demo"><label><input type="checkbox" checked> Show predicted orbit path</label></div>
+        <span class="info" title="Plain-language explanation on hover">i</span>
+      </div>
+    </div>
+
+    <p class="desc desc--component">Collapsible section — native <code>&lt;details&gt;</code> with a rotating chevron, no JS.</p>
+    <div class="demo">
+      <details class="section-demo" open>
+        <summary>Orbital Elements</summary>
+        <div class="body">Six sliders — semimajor axis, eccentricity, inclination, RAAN, argument of periapsis, true anomaly — collapse under this pattern throughout the app.</div>
+      </details>
+    </div>
+
+    <p class="desc desc--component">Telemetry rows &amp; orbit-type badges — dashed dividers, stroke-style differentiates state instead of color.</p>
+    <div class="demo">
+      <div class="row row--top">
+        <div>
+          <div class="tele-row"><span>Orbit type</span><span class="badge type-elliptical">Elliptical</span></div>
+          <div class="tele-row"><span>Apoapsis alt.</span><span>18,411 km</span></div>
+          <div class="tele-row"><span>Periapsis alt.</span><span>402 km</span></div>
+        </div>
+        <div class="stack">
+          <span class="badge type-circular">Circular</span>
+          <span class="badge type-elliptical">Elliptical</span>
+          <span class="badge type-escape">Escape</span>
+          <span class="badge type-crash">Suborbital / Impact</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="desc desc--component">Pane label — floating chip identifying a 3D viewport, and a banner toast for transient status messages.</p>
+    <div class="demo">
+      <div class="row">
+        <span class="pane-label-demo">3D View</span>
+        <span class="pane-label-demo">Ground Track</span>
+        <span class="pane-label-demo">Orbit Overview</span>
+        <span class="banner-demo">Launched: Elliptical</span>
+      </div>
+    </div>
+
+    <p class="desc desc--component">Floating glass panel — the base container for every control group. Blurred, bordered, drop-shadowed, corner-pinned.</p>
+    <div class="demo demo--bare">
+      <div class="float-panel-demo">
+        <div class="float-panel-demo__title">Telemetry</div>
+        <div class="tele-row"><span>Eccentricity</span><span>0.300</span></div>
+        <div class="tele-row"><span>Period</span><span>3.8h</span></div>
+      </div>
+    </div>
+
+    <p class="desc desc--component">Page loader — full-screen percentage counter shown on first load (<code>--color-loader-bg</code>, fades out over <code>--duration-slow</code>).</p>
+    <div class="loader-demo" aria-hidden="true">42%</div>
+  </section>
+
+  </main>
+
+  <script src="../assets/js/design-system-guide.js"></script>
 </body>
 </html>
