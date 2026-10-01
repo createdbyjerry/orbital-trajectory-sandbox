@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orbital Trajectory Sandbox</title>
+  <meta name="description" content="Interactive orbital mechanics learning sandbox: tweak classical orbital elements and watch the trajectory propagate in 3D.">
+  <!-- Relative paths so it works on a GitHub Pages project site (/<repo>/) -->
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/loader.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<!-- Page loader: must stay the first thing in <body>, script loads synchronously -->
+<div id="page-loader">
+  <div id="loader-percent">0%</div>
+</div>
+<script src="assets/js/loader.js"></script>
+
+<div id="app">
+  <div id="grid">
+    <div class="pane" id="paneMain">
+      <div class="pane-label">Orbit Overview</div>
+      <div id="overview-container"></div>
+    </div>
+    <div class="pane" id="paneTrack">
+      <div class="pane-label">Ground Track</div>
+      <canvas id="groundTrackCanvas"></canvas>
+    </div>
+    <div class="pane" id="paneOverview">
+      <div class="pane-label">3D View</div>
+      <div id="canvas-container"></div>
+    </div>
+  </div>
+  <div id="banner"></div>
+  <div id="hud">Drag to orbit camera &middot; Scroll to zoom</div>
+
+  <div id="panelElements" class="float-panel">
+   <div class="panel-scroll">
+    <h1>ORBITAL TRAJECTORY SANDBOX</h1>
+
+    <details class="section" open>
+      <summary>Presets</summary>
+      <div class="body preset-grid">
+        <button class="preset" data-p="leo">LEO Circular</button>
+        <button class="preset" data-p="gto">GTO Transfer</button>
+        <button class="preset" data-p="molniya">Molniya (HEO)</button>
+        <button class="preset" data-p="geo">GEO Circular</button>
+        <button class="preset" data-p="polar">Polar Orbit</button>
+        <button class="preset" data-p="sub">Suborbital Impact</button>
+      </div>
+    </details>
+
+    <details class="section" open>
+      <summary>Orbital Elements</summary>
+      <div class="body">
+        <div class="ctrl">
+          <label><span class="lbl">Semimajor Axis (a)<span class="info" title="Half the longest diameter of the orbit ellipse — controls overall size.">i</span></span><span class="val"><span id="aVal">15000</span> km</span></label>
+          <input type="range" id="aSlider" min="6600" max="50000" step="10" value="15000">
+          <div class="hint">Periapsis alt: <span id="periHint">—</span> km &middot; Apoapsis alt: <span id="apoHint">—</span> km</div>
+        </div>
+        <div class="ctrl">
+          <label><span class="lbl">Eccentricity (e)<span class="info" title="Shape of the ellipse: 0 = circle, closer to 1 = more stretched.">i</span></span><span class="val" id="eVal">0.30</span></label>
+          <input type="range" id="eSlider" min="0" max="0.95" step="0.01" value="0.3">
+        </div>
+        <div class="ctrl">
+          <label><span class="lbl">Inclination (i)<span class="info" title="Tilt of the orbital plane relative to the equator.">i</span></span><span class="val"><span id="iVal">45</span>°</span></label>
+          <input type="range" id="iSlider" min="0" max="180" step="1" value="45">
+        </div>
+        <div class="ctrl">
+          <label><span class="lbl">RAAN (Ω)<span class="info" title="Right Ascension of the Ascending Node — swivels the orbital plane about the polar axis.">i</span></span><span class="val"><span id="omVal">0</span>°</span></label>
+          <input type="range" id="omSlider" min="0" max="360" step="1" value="0">
+        </div>
+        <div class="ctrl">
+          <label><span class="lbl">Argument of Periapsis (ω)<span class="info" title="Rotates the ellipse within its own orbital plane.">i</span></span><span class="val"><span id="wVal">0</span>°</span></label>
+          <input type="range" id="wSlider" min="0" max="360" step="1" value="0">
+        </div>
+        <div class="ctrl">
+          <label><span class="lbl">True Anomaly (ν)<span class="info" title="Starting position of the spacecraft along the orbit, measured from periapsis.">i</span></span><span class="val"><span id="nuVal">0</span>°</span></label>
+          <input type="range" id="nuSlider" min="0" max="360" step="1" value="0">
+        </div>
+        <div class="row">
+          <button id="btnCircularize">Circularize</button>
+          <button id="btnPeriapsis">Start at Periapsis</button>
+        </div>
+      </div>
+    </details>
+
+    <details class="section">
+      <summary>How This Works</summary>
+      <div class="body" id="howItWorks">
+        The six sliders are the classical orbital elements: semimajor axis and eccentricity set the ellipse's size and shape, inclination and RAAN orient its plane in space, argument of periapsis rotates the ellipse within that plane, and true anomaly places the spacecraft along it. These are converted into a starting position and velocity, then propagated forward with a 4th-order Runge-Kutta integrator under a = −μr/|r|³ (μ = 398,600 km³/s²) gravity. If periapsis dips below Earth's surface, the trajectory ends in impact.
+      </div>
+    </details>
+    <footer>Prototype v0.1 — Orbital Trajectory Learning Sandbox · <a href="design-system/">Design system</a></footer>
+   </div>
+  </div>
+
+  <details id="panelSim" class="float-panel" open>
+    <summary class="panel-title">Simulation</summary>
+    <div class="panel-body">
+      <div class="row">
+        <button id="btnLaunch" class="primary">▶ Play</button>
+        <button id="btnReset" class="danger">⏹ Stop</button>
+      </div>
+      <div class="ctrl ctrl--spaced">
+        <label><span class="lbl">Time Scale</span><span class="val"><span id="tsVal">60</span>x</span></label>
+        <input type="range" id="tsSlider" min="1" max="2000" step="1" value="60">
+      </div>
+      <div class="toggles">
+        <label><input type="checkbox" id="toggleOrbit" checked> Show predicted orbit path</label>
+        <label><input type="checkbox" id="toggleTrail" checked> Show flight trail</label>
+        <label><input type="checkbox" id="toggleVec" checked> Show velocity vector</label>
+      </div>
+    </div>
+  </details>
+
+  <details id="panelTelemetry" class="float-panel" open>
+    <summary class="panel-title">Telemetry</summary>
+    <div class="panel-body">
+      <div class="tele-row"><span>Orbit type</span><span id="orbitType" class="type-none">—</span></div>
+      <div class="tele-row"><span>Altitude</span><span id="teleAlt">400.0 km</span></div>
+      <div class="tele-row"><span>Speed</span><span id="teleSpd">7.67 km/s</span></div>
+      <div class="tele-row"><span>Apoapsis alt.</span><span id="teleApo">—</span></div>
+      <div class="tele-row"><span>Periapsis alt.</span><span id="telePeri">—</span></div>
+      <div class="tele-row"><span>Eccentricity</span><span id="teleEcc">—</span></div>
+      <div class="tele-row"><span>Semi-major axis</span><span id="teleSma">—</span></div>
+      <div class="tele-row"><span>Period</span><span id="telePeriod">—</span></div>
+      <div class="tele-row"><span>Mission elapsed</span><span id="teleElapsed">0s</span></div>
+    </div>
+  </details>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

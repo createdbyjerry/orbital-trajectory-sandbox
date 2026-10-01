@@ -1,0 +1,19 @@
+name: Tokens check
+
+# Fails a pull request if tokens.json was edited but tokens.css wasn't rebuilt.
+on:
+  pull_request:
+    paths:
+      - 'tokens/**'
+      - 'assets/css/tokens.css'
+      - 'scripts/build-tokens.mjs'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm run tokens:check

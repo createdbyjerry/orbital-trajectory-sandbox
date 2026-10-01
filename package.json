@@ -1,0 +1,16 @@
+{
+  "name": "orbital-trajectory-sandbox",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Interactive orbital mechanics learning sandbox and its design system.",
+  "type": "module",
+  "scripts": {
+    "tokens:build": "node scripts/build-tokens.mjs",
+    "tokens:check": "node scripts/build-tokens.mjs --check",
+    "tokens:watch": "node --watch-path=tokens scripts/build-tokens.mjs",
+    "start": "npx --yes serve ."
+  },
+  "engines": {
+    "node": ">=18.11"
+  }
+}

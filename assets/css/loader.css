@@ -1,0 +1,32 @@
+/**
+ * Page loader — full-screen percentage counter shown while the page loads.
+ * Pairs with assets/js/loader.js. Uses tokens from tokens.css.
+ */
+#page-loader{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--color-loader-bg);
+  transition:opacity var(--duration-slow) ease, visibility var(--duration-slow) ease;
+}
+#page-loader.loader-hide{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+#loader-percent{
+  font-family:var(--font-family-base);
+  font-size:4vw;
+  font-weight:var(--font-weight-semibold);
+  color:var(--color-white);
+  letter-spacing:0.02em;
+  min-width:3ch;
+  text-align:center;
+  font-variant-numeric:tabular-nums;
+}
+@media (max-width:768px){
+  #loader-percent{font-size:12vw;}
+}
