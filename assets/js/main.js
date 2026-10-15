@@ -11,6 +11,12 @@ const token = (name, fallback) => (rootStyle.getPropertyValue(name).trim() || fa
 const COLOR_ACCENT = token('--color-accent', '#ff4d4d');
 const COLOR_WHITE  = token('--color-white',  '#ffffff');
 
+/* ---------- responsive mode (same breakpoints as the mobile block in main.css) ---------- */
+const BP_MOBILE    = token('--breakpoint-mobile', '768px');
+const BP_LANDSCAPE = token('--breakpoint-landscape-height', '500px');
+const mobileMQ = window.matchMedia('(max-width:'+BP_MOBILE+'), (pointer:coarse) and (max-height:'+BP_LANDSCAPE+')');
+const isMobile = () => mobileMQ.matches;
+
 /* ---------- textures ---------- */
 // Relative to index.html, served from the repo by GitHub Pages (same origin, no CORS issues).
 // If either image fails to load, the procedural textures below are used instead.
@@ -40,9 +46,11 @@ function sizeRenderer(rnd, cam, el){
   const w=Math.max(2,el.clientWidth), h=Math.max(2,el.clientHeight);
   rnd.setSize(w,h); cam.aspect=w/h; cam.updateProjectionMatrix();
 }
+// the overview pane is hidden in the mobile layout; skip its renderer entirely there
+const overviewVisible = () => overviewContainer.offsetParent !== null;
 function sizeAll(){
   sizeRenderer(renderer, camera, container);
-  sizeRenderer(renderer2, camera2, overviewContainer);
+  if(overviewVisible()) sizeRenderer(renderer2, camera2, overviewContainer);
 }
 
 scene.add(new THREE.AmbientLight(0xffffff, 0.55));
@@ -132,11 +140,27 @@ function updateCamera(){
   camera.lookAt(0,0,0);
 }
 updateCamera();
-let dragging=false, lastX=0, lastY=0;
-renderer.domElement.addEventListener('pointerdown', e=>{dragging=true;lastX=e.clientX;lastY=e.clientY;});
-window.addEventListener('pointerup', ()=>dragging=false);
+// one pointer drags (mouse or finger), two fingers pinch to zoom
+const pointers = new Map();
+let lastX=0, lastY=0, pinchDist=0;
+const clampRadius = r => Math.min(80, Math.max(3.2, r));
+const twoFingerDist = () => { const [a,b]=[...pointers.values()]; return Math.hypot(a.x-b.x, a.y-b.y); };
+renderer.domElement.addEventListener('pointerdown', e=>{
+  pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  lastX=e.clientX; lastY=e.clientY;
+  if(pointers.size===2) pinchDist=twoFingerDist();
+});
+const endPointer = e=>{ pointers.delete(e.pointerId); if(pointers.size===1){ const p=[...pointers.values()][0]; lastX=p.x; lastY=p.y; } };
+window.addEventListener('pointerup', endPointer);
+window.addEventListener('pointercancel', endPointer);
 window.addEventListener('pointermove', e=>{
-  if(!dragging) return;
+  if(!pointers.has(e.pointerId)) return;
+  pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  if(pointers.size>=2){
+    const d=twoFingerDist();
+    if(pinchDist>0) camState.radius = clampRadius(camState.radius*pinchDist/d);
+    pinchDist=d; updateCamera(); return;
+  }
   const dx=e.clientX-lastX, dy=e.clientY-lastY;
   lastX=e.clientX; lastY=e.clientY;
   camState.theta -= dx*0.006;
@@ -145,10 +169,11 @@ window.addEventListener('pointermove', e=>{
 });
 renderer.domElement.addEventListener('wheel', e=>{
   e.preventDefault();
-  camState.radius = Math.min(80, Math.max(3.2, camState.radius*(1+e.deltaY*0.001)));
+  camState.radius = clampRadius(camState.radius*(1+e.deltaY*0.001));
   updateCamera();
 }, {passive:false});
 window.addEventListener('resize', sizeAll);
+if(window.ResizeObserver) new ResizeObserver(sizeAll).observe(container);
 sizeAll();
 
 /* ---------- orbit mechanics ---------- */
@@ -478,10 +503,16 @@ function drawGroundTrack(){
   if(canvas.width!==cw || canvas.height!==ch){ canvas.width=cw; canvas.height=ch; }
   const ctx = canvas.getContext('2d');
   ctx.setTransform(dpr,0,0,dpr,0,0);
-  const W=rect.width, H=rect.height;
-  ctx.clearRect(0,0,W,H);
-  ctx.drawImage(earthImgLoaded ? earthImg : worldMap, 0,0,W,H);
-  const toXY=(lon,lat)=>[(lon+180)/360*W, (90-lat)/180*H];
+  let W=rect.width, H=rect.height;
+  ctx.clearRect(0,0,rect.width,rect.height);
+  // mobile: keep the equirectangular map at 2:1 (letterboxed) so it never distorts
+  let ox=0, oy=0;
+  if(isMobile()){
+    const fitW=Math.min(W, H*2), fitH=fitW/2;
+    ox=(W-fitW)/2; oy=(H-fitH)/2; W=fitW; H=fitH;
+  }
+  ctx.drawImage(earthImgLoaded ? earthImg : worldMap, ox,oy,W,H);
+  const toXY=(lon,lat)=>[ox+(lon+180)/360*W, oy+(90-lat)/180*H];
   const strokePath=(color,width)=>{
     ctx.strokeStyle=color; ctx.lineWidth=width; ctx.beginPath();
     let prev=null;
@@ -583,6 +614,43 @@ el('toggleOrbit').addEventListener('change', ()=>{
 });
 el('toggleTrail').addEventListener('change', e=>{ if(!e.target.checked){ trailCount=0; trailGeo.setDrawRange(0,0);} });
 
+// info icons: hover shows the title on desktop; a tap shows it in the banner (works on touch)
+document.querySelectorAll('.info').forEach(i=>i.addEventListener('click', e=>{
+  e.preventDefault(); e.stopPropagation(); showBanner(i.title);
+}));
+
+/* ---------- mobile: icon dock + one bottom sheet at a time ---------- */
+const app = el('app');
+const sheets = [...document.querySelectorAll('details[data-sheet]')];
+const dockBtns = [...document.querySelectorAll('.dock-btn')];
+const desktopOpenState = new Map(sheets.map(d=>[d, d.open]));
+function setSheet(name){
+  if(name) app.dataset.sheet = name; else delete app.dataset.sheet;
+  dockBtns.forEach(b=>b.setAttribute('aria-expanded', String(b.dataset.sheetTarget===name)));
+  const target = sheets.find(d=>d.dataset.sheet===name);
+  if(target){
+    target.open = true;
+    const panel = target.closest('.float-panel');
+    if(panel){ panel.open = true; panel.scrollTop = 0; }
+  }
+}
+dockBtns.forEach(b=>b.addEventListener('click', ()=>{
+  setSheet(app.dataset.sheet===b.dataset.sheetTarget ? null : b.dataset.sheetTarget);
+}));
+// on mobile the sheet header (summary) collapses the sheet instead of toggling the <details>
+sheets.forEach(d=>d.querySelector(':scope > summary').addEventListener('click', e=>{
+  if(!isMobile()) return;
+  e.preventDefault(); setSheet(null);
+}));
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && app.dataset.sheet) setSheet(null); });
+function onModeChange(){
+  setSheet(null); // every container starts collapsed on mobile
+  if(!isMobile()) desktopOpenState.forEach((open,d)=>{ d.open=open; });
+  sizeAll();
+}
+if(mobileMQ.addEventListener) mobileMQ.addEventListener('change', onModeChange); else mobileMQ.addListener(onModeChange);
+onModeChange();
+
 /* ---------- main loop ---------- */
 const clock = new THREE.Clock();
 function animate(){
@@ -619,7 +687,7 @@ function animate(){
   camera2.position.set(0, overviewRadius*0.55, overviewRadius);
   camera2.lookAt(0,0,0);
   renderer.render(scene, camera);
-  renderer2.render(scene, camera2);
+  if(overviewVisible()) renderer2.render(scene, camera2);
 }
 
 previewFromSliders();

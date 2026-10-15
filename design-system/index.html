@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Design System — Orbital Trajectory Sandbox</title>
   <meta name="description" content="Theme, color, typography, spacing and UI components for the Orbital Trajectory Learning Sandbox.">
   <link rel="stylesheet" href="../assets/css/tokens.css">
@@ -19,7 +19,7 @@
   <header class="page-header">
     <h1>Orbital Trajectory Sandbox — Design System</h1>
     <p>Reference documentation for the theme, color palette, typography, and UI components used to build the Orbital Trajectory Learning Sandbox prototype. High-contrast, monochrome, glass-panel aesthetic inspired by mission-control / orbital-schematic instrumentation. Every value below is a named token. The same names and values are shared with the prototype's CSS through <code>assets/css/tokens.css</code>, which is generated from <code>tokens/tokens.json</code> (W3C design-tokens format, importable into Figma via Tokens Studio).</p>
-    <span class="tag">v1.1 · values read live from tokens.css</span>
+    <span class="tag">v1.2 · mobile layout · values read live from tokens.css</span>
   </header>
 
   <main>
@@ -44,6 +44,14 @@
       <div class="principle">
         <h3>Progressive disclosure</h3>
         <p>Every panel section is a native <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> so users can collapse what they don't need — no custom JS accordion required.</p>
+      </div>
+      <div class="principle">
+        <h3>Two views on small screens</h3>
+        <p>At or below <span data-token="--breakpoint-mobile">768px</span> the Orbit Overview pane is dropped. The Ground Track (kept at 2:1) sits above the 3D View, which fills the rest of the screen.</p>
+      </div>
+      <div class="principle">
+        <h3>Everything collapsed by default on mobile</h3>
+        <p>On mobile all controls start hidden behind an icon dock. Each icon opens one sheet (Presets, Elements, Simulation, Telemetry, How it works), so only one container is ever on screen.</p>
       </div>
     </div>
   </section>
@@ -85,6 +93,8 @@
         <div class="meta"><div class="name">color-glass-strong</div><div class="val" data-token="--color-glass-strong">rgba(255,255,255,0.08)</div></div></div>
       <div class="swatch"><div class="fill checker"><span style="background:var(--color-glass-hover);"></span></div>
         <div class="meta"><div class="name">color-glass-hover</div><div class="val" data-token="--color-glass-hover">rgba(255,255,255,0.14)</div></div></div>
+      <div class="swatch"><div class="fill checker"><span style="background:var(--color-glass-solid);"></span></div>
+        <div class="meta"><div class="name">color-glass-solid</div><div class="val" data-token="--color-glass-solid">rgba(12,12,12,0.78)</div></div></div>
       <div class="swatch"><div class="fill" style="background:var(--color-button-primary-hover);"></div>
         <div class="meta"><div class="name">color-button-primary-hover</div><div class="val" data-token="--color-button-primary-hover">#e2e2e2</div></div></div>
       <div class="swatch"><div class="fill" style="background:var(--color-loader-bg);"></div>
@@ -162,9 +172,11 @@
       <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-20);"></div><div class="strip-name">space-20</div><div class="strip-val"><span data-token="--space-20">20px</span></div></div>
       <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-22);"></div><div class="strip-name">space-22</div><div class="strip-val"><span data-token="--space-22">22px</span></div></div>
       <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-24);"></div><div class="strip-name">space-24</div><div class="strip-val"><span data-token="--space-24">24px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-28);"></div><div class="strip-name">space-28</div><div class="strip-val"><span data-token="--space-28">28px</span></div></div>
       <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-36);"></div><div class="strip-name">space-36</div><div class="strip-val"><span data-token="--space-36">36px</span></div></div>
       <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-48);"></div><div class="strip-name">space-48</div><div class="strip-val"><span data-token="--space-48">48px</span></div></div>
       <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-56);"></div><div class="strip-name">space-56</div><div class="strip-val"><span data-token="--space-56">56px</span></div></div>
+      <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-64);"></div><div class="strip-name">space-64</div><div class="strip-val"><span data-token="--space-64">64px</span></div></div>
       <div class="strip-row"><div class="strip-swatch strip-swatch--space" style="width:var(--space-100);"></div><div class="strip-name">space-100</div><div class="strip-val"><span data-token="--space-100">100px</span></div></div>
     </div>
   </section>
@@ -184,6 +196,7 @@
         <div class="strip-row"><div class="strip-swatch strip-swatch--radius" style="border-radius:var(--radius-14);"></div><div class="strip-name">radius-14</div><div class="strip-val"><span data-token="--radius-14">14px</span></div></div>
         <div class="strip-row"><div class="strip-swatch strip-swatch--radius" style="border-radius:var(--radius-18);"></div><div class="strip-name">radius-18</div><div class="strip-val"><span data-token="--radius-18">18px</span></div></div>
         <div class="strip-row"><div class="strip-swatch strip-swatch--radius" style="border-radius:var(--radius-20);"></div><div class="strip-name">radius-20</div><div class="strip-val"><span data-token="--radius-20">20px</span> · pill</div></div>
+        <div class="strip-row"><div class="strip-swatch strip-swatch--radius" style="border-radius:var(--radius-24);"></div><div class="strip-name">radius-24</div><div class="strip-val"><span data-token="--radius-24">24px</span> · sheet</div></div>
         <div class="strip-row"><div class="strip-swatch strip-swatch--radius" style="border-radius:var(--radius-round);"></div><div class="strip-name">radius-round</div><div class="strip-val"><span data-token="--radius-round">50%</span></div></div>
       </div>
       <div class="card">
@@ -197,6 +210,9 @@
         <div class="strip-row"><div class="strip-name">duration-fast</div><div class="strip-val"><span data-token="--duration-fast">0.15s</span></div></div>
         <div class="strip-row"><div class="strip-name">duration-base</div><div class="strip-val"><span data-token="--duration-base">0.18s</span></div></div>
         <div class="strip-row"><div class="strip-name">duration-slow</div><div class="strip-val"><span data-token="--duration-slow">0.5s</span></div></div>
+        <div class="strip-row"><div class="strip-name">duration-sheet</div><div class="strip-val"><span data-token="--duration-sheet">0.28s</span></div></div>
+        <div class="strip-row"><div class="strip-name">easing-standard</div><div class="strip-val"><span data-token="--easing-standard">cubic-bezier(0.2,0.8,0.2,1)</span></div></div>
+        <div class="strip-row"><div class="strip-name">shadow-sheet</div><div class="strip-val"><span data-token="--shadow-sheet">0 -12px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)</span></div></div>
         <div class="strip-row"><div class="strip-name">shadow-panel</div><div class="strip-val"><span data-token="--shadow-panel">0 20px 60px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06)</span></div></div>
       </div>
     </div>
@@ -277,6 +293,66 @@
 
     <p class="desc desc--component">Page loader — full-screen percentage counter shown on first load (<code>--color-loader-bg</code>, fades out over <code>--duration-slow</code>).</p>
     <div class="loader-demo" aria-hidden="true">42%</div>
+  </section>
+
+  <!-- RESPONSIVE / MOBILE -->
+  <section>
+    <h2>Responsive &amp; Mobile</h2>
+    <p class="desc">One breakpoint switches the app from three floating panels to a two-view layout with an icon dock. CSS media queries can't read custom properties, so <code>main.css</code> repeats the breakpoint values; <code>main.js</code> reads them from the tokens so the JavaScript and CSS always agree.</p>
+    <div class="grid cols-2">
+      <div class="card">
+        <div class="demo-label">Breakpoints &amp; sizes</div>
+        <div class="strip-row"><div class="strip-name">breakpoint-mobile</div><div class="strip-val"><span data-token="--breakpoint-mobile">768px</span> · max-width</div></div>
+        <div class="strip-row"><div class="strip-name">breakpoint-landscape-height</div><div class="strip-val"><span data-token="--breakpoint-landscape-height">500px</span> · touch + max-height (phones in landscape)</div></div>
+        <div class="strip-row"><div class="strip-name">size-touch-target</div><div class="strip-val"><span data-token="--size-touch-target">44px</span> · min tap height</div></div>
+        <div class="strip-row"><div class="strip-name">size-icon</div><div class="strip-val"><span data-token="--size-icon">20px</span> · dock glyph</div></div>
+        <div class="strip-row"><div class="strip-name">size-dock</div><div class="strip-val"><span data-token="--size-dock">64px</span> · + safe-area inset</div></div>
+        <div class="strip-row"><div class="strip-name">size-sheet-max</div><div class="strip-val"><span data-token="--size-sheet-max">52dvh</span></div></div>
+        <div class="strip-row"><div class="strip-name">size-sheet-landscape</div><div class="strip-val"><span data-token="--size-sheet-landscape">340px</span></div></div>
+      </div>
+      <div class="card">
+        <div class="demo-label">Stacking (z-index)</div>
+        <div class="strip-row"><div class="strip-name">z-index-pane-label</div><div class="strip-val"><span data-token="--z-index-pane-label">3</span></div></div>
+        <div class="strip-row"><div class="strip-name">z-index-overlay</div><div class="strip-val"><span data-token="--z-index-overlay">5</span> · banner, HUD</div></div>
+        <div class="strip-row"><div class="strip-name">z-index-panel</div><div class="strip-val"><span data-token="--z-index-panel">6</span> · panels / sheets</div></div>
+        <div class="strip-row"><div class="strip-name">z-index-dock</div><div class="strip-val"><span data-token="--z-index-dock">8</span></div></div>
+        <div class="demo-label demo-label--spaced">Layout</div>
+        <div class="layout-demo" aria-hidden="true">
+          <div class="layout-demo__phone">
+            <div class="layout-demo__track">Ground Track · 2:1</div>
+            <div class="layout-demo__3d">3D View</div>
+            <div class="layout-demo__dock"><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+          <div class="layout-demo__phone layout-demo__phone--land">
+            <div class="layout-demo__track">Track</div>
+            <div class="layout-demo__3d">3D</div>
+            <div class="layout-demo__dock"><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="desc desc--component">Icon dock — five icon buttons, one per container. Monochrome 1.5px stroke icons at <code>--size-icon</code>; the open sheet's button gets the glass-hover fill and a hairline border. In landscape it becomes a vertical rail with labels hidden.</p>
+    <div class="demo demo--bare">
+      <nav class="dock-demo" aria-label="Dock example">
+        <button type="button" class="dock-btn"><svg class="dock-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg><span>Presets</span></button>
+        <button type="button" class="dock-btn is-active"><svg class="dock-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2.2" class="knob"/><circle cx="15.5" cy="12" r="2.2" class="knob"/><circle cx="7" cy="18" r="2.2" class="knob"/></svg><span>Elements</span></button>
+        <button type="button" class="dock-btn"><svg class="dock-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M10 8.6v6.8l5.4-3.4z" class="fill"/></svg><span>Simulation</span></button>
+        <button type="button" class="dock-btn"><svg class="dock-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l2.5-6 5 12 2.5-6h4"/></svg><span>Telemetry</span></button>
+        <button type="button" class="dock-btn"><svg class="dock-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r="0.6" class="fill"/></svg><span>How it works</span></button>
+      </nav>
+    </div>
+
+    <p class="desc desc--component">Bottom sheet — the mobile form of a floating panel. Denser glass (<code>--color-glass-solid</code>), <code>--radius-24</code> top corners, upward <code>--shadow-sheet</code>, a grab handle, and a sticky header whose × collapses it. Slides in over <code>--duration-sheet</code> with <code>--easing-standard</code>; motion is removed for reduced-motion users.</p>
+    <div class="demo demo--bare">
+      <div class="sheet-demo">
+        <div class="sheet-demo__head">Telemetry<span class="sheet-demo__close" aria-hidden="true">×</span></div>
+        <div class="sheet-demo__body">
+          <div class="tele-row"><span>Altitude</span><span>4,121.9 km</span></div>
+          <div class="tele-row"><span>Speed</span><span>7.02 km/s</span></div>
+        </div>
+      </div>
+    </div>
   </section>
 
   </main>

@@ -6,7 +6,7 @@ An interactive, browser-based learning sandbox for orbital mechanics. Tweak the 
 **Design system:** `https://<your-username>.github.io/<repo-name>/design-system/`
 **Token reference:** `https://<your-username>.github.io/<repo-name>/design-system/tokens.html`
 
-> Prototype v0.1. No build step, no framework, no dependencies to install for the site itself. Plain HTML, CSS and JavaScript plus three.js from a CDN. All images are hosted in the repo.
+> Prototype v0.2. No build step, no framework, no dependencies to install for the site itself. Plain HTML, CSS and JavaScript plus three.js from a CDN. All images are hosted in the repo.
 
 ---
 
@@ -17,6 +17,7 @@ An interactive, browser-based learning sandbox for orbital mechanics. Tweak the 
 - **Three synchronized views.** A free-orbit 3D camera, an Earth-locked overview camera, and an equirectangular ground track.
 - **Live telemetry.** Orbit classification (circular / elliptical / escape / impact), altitude, speed, apsides, eccentricity, semimajor axis, period and mission elapsed time.
 - **Real physics.** State vectors are propagated with a 4th-order Runge–Kutta integrator under two-body gravity.
+- **Mobile layout.** At ≤ 768px wide (or a phone in landscape), the app shows two views (Ground Track above the 3D View), and every control collapses behind an icon dock. Each icon opens one bottom sheet: Presets, Orbital Elements, Simulation, Telemetry or How It Works. Supports touch drag to orbit and pinch to zoom.
 - **Token-driven design system.** Every color, size and spacing value comes from a single JSON file.
 
 ## How the simulation works
@@ -32,6 +33,20 @@ a = −μ r / |r|³        μ = 398,600.4418 km³/s²,  R⊕ = 6,378.137 km
 If the trajectory intersects Earth's surface, the simulation stops and flags an impact. The Moon is currently decorative only (no gravity), a placeholder for future multi-body work.
 
 ---
+
+## Mobile layout
+
+| | Desktop (> 768px) | Mobile (≤ 768px, or touch + height ≤ 500px) |
+| --- | --- | --- |
+| Views | Orbit Overview, Ground Track, 3D View | Ground Track (2:1) + 3D View. The Overview pane is hidden and not rendered. |
+| Controls | Three floating glass panels | All collapsed. An icon dock opens one bottom sheet at a time. |
+| Camera | Drag + scroll wheel | Drag + pinch |
+| Landscape phone | — | Views side by side; the dock becomes a vertical rail with side sheets |
+
+- The breakpoints live in `tokens.json` as `breakpoint.mobile` and `breakpoint.landscape-height`. CSS media queries can't use custom properties, so `main.css` repeats the values. If you change the tokens, update the media queries in the `MOBILE` block too. `main.js` reads the tokens directly.
+- Sheets reuse the existing `<details>` sections and panels (`data-sheet="presets|elements|how|sim|telemetry"`). The active sheet is stored as `#app[data-sheet]`. Tapping a sheet header, tapping the active dock icon again, or pressing Esc closes it.
+- Safe-area insets (notch, home indicator) are respected via `viewport-fit=cover` and `env(safe-area-inset-*)`.
+- Tapping an ⓘ icon shows its explanation in the banner toast, because tooltips need hover.
 
 ## Repository structure
 
@@ -205,7 +220,7 @@ Adjust `MIN_TIME` in `loader.js` to change the minimum display time. The fade du
 
 - **Textures must stay equirectangular (2:1).** `earth-texture.png` is used both on the globe and as the ground-track background, so a different projection or aspect ratio will misalign the satellite track. If an image fails to load, the app falls back to procedurally generated textures.
 - **three.js is pinned to r128** via cdnjs. Upgrading may require changes (for example, `Geometry` and some helper APIs changed in later releases).
-- On short viewports the floating panels can overlap one another.
+- On short desktop viewports the floating panels can overlap one another. Below the mobile breakpoint the dock and sheets replace them.
 
 ## Roadmap ideas
 
