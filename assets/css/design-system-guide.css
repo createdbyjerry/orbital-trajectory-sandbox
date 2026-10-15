@@ -150,3 +150,39 @@ details.section-demo .body{font-size:var(--font-size-11-5);color:var(--color-mut
 .loader-demo{display:flex;align-items:center;justify-content:center;height:140px;border-radius:var(--radius-14);
   background:var(--color-loader-bg);border:var(--border-width-1) solid var(--color-line);
   font-size:var(--font-size-24);font-weight:var(--font-weight-semibold);color:var(--color-white);font-variant-numeric:tabular-nums;}
+
+/* ---------- responsive & mobile demos ---------- */
+.demo-label--spaced{margin-top:var(--space-20);}
+.dock-demo{display:flex;gap:var(--space-2);max-width:420px;padding:var(--space-6);
+  background:var(--color-glass-solid);border:var(--border-width-1) solid var(--color-line);border-radius:var(--radius-18);box-shadow:var(--shadow-sheet);}
+.dock-demo .dock-btn{flex:1;min-width:0;min-height:var(--size-touch-target);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-4);
+  padding:var(--space-6) var(--space-2);border:var(--border-width-1) solid transparent;border-radius:var(--radius-12);
+  color:var(--color-muted);font-size:var(--font-size-10);letter-spacing:var(--letter-spacing-0-5);white-space:nowrap;}
+.dock-demo .dock-btn span{overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.dock-demo .dock-btn:hover{background:var(--color-glass-strong);border-color:transparent;color:var(--color-text);}
+.dock-demo .dock-btn.is-active{background:var(--color-glass-hover);border-color:var(--color-line);color:var(--color-white);}
+.dock-icon{width:var(--size-icon);height:var(--size-icon);fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+.dock-icon .knob,.dock-icon .fill{fill:currentColor;}
+
+.sheet-demo{max-width:420px;background:var(--color-glass-solid);border:var(--border-width-1) solid var(--color-line);border-bottom:none;
+  border-radius:var(--radius-24) var(--radius-24) 0 0;box-shadow:var(--shadow-sheet);overflow:hidden;}
+.sheet-demo__head{position:relative;display:flex;align-items:center;justify-content:space-between;padding:var(--space-20) var(--space-20) var(--space-12);
+  font-size:var(--font-size-11);text-transform:uppercase;letter-spacing:var(--letter-spacing-1-5);border-bottom:var(--border-width-1) solid var(--color-line);}
+.sheet-demo__head::before{content:'';position:absolute;top:var(--space-7);left:50%;transform:translateX(-50%);width:var(--space-36);height:var(--space-4);
+  border-radius:var(--radius-20);background:var(--color-line);}
+.sheet-demo__close{width:var(--space-28);height:var(--space-28);display:flex;align-items:center;justify-content:center;border-radius:var(--radius-round);
+  border:var(--border-width-1) solid var(--color-line);background:var(--color-glass-strong);font-size:var(--font-size-16);letter-spacing:0;}
+.sheet-demo__body{padding:var(--space-14) var(--space-20) var(--space-20);}
+.sheet-demo .tele-row{width:auto;}
+
+.layout-demo{display:flex;gap:var(--space-16);align-items:flex-end;flex-wrap:wrap;}
+.layout-demo__phone{width:96px;height:180px;display:grid;grid-template-rows:auto 1fr auto;gap:var(--space-2);padding:var(--space-4);
+  border:var(--border-width-1) solid var(--color-line-strong);border-radius:var(--radius-14);font-size:var(--font-size-9);color:var(--color-muted);
+  text-transform:uppercase;letter-spacing:var(--letter-spacing-0-5);text-align:center;}
+.layout-demo__track{aspect-ratio:2 / 1;display:flex;align-items:center;justify-content:center;border:var(--border-width-1) solid var(--color-line);border-radius:var(--radius-4);line-height:var(--line-height-1-3);}
+.layout-demo__3d{display:flex;align-items:center;justify-content:center;border:var(--border-width-1) solid var(--color-line);border-radius:var(--radius-4);}
+.layout-demo__dock{display:flex;justify-content:space-around;align-items:center;height:16px;border-top:var(--border-width-1) solid var(--color-line);}
+.layout-demo__dock i{width:5px;height:5px;border-radius:var(--radius-round);background:var(--color-line-strong);}
+.layout-demo__phone--land{width:180px;height:96px;grid-template-rows:1fr;grid-template-columns:1fr 1.25fr 16px;}
+.layout-demo__phone--land .layout-demo__track{aspect-ratio:auto;}
+.layout-demo__phone--land .layout-demo__dock{flex-direction:column;height:auto;border-top:none;border-left:var(--border-width-1) solid var(--color-line);}

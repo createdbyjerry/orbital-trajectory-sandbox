@@ -22,6 +22,7 @@
   --color-glass-hover:rgba(255,255,255,0.14);
   --color-button-primary-hover:#e2e2e2;
   --color-loader-bg:#0d0d0d;
+  --color-glass-solid:rgba(12,12,12,0.78);
 
   /* ===== Font ===== */
   --font-family-base:'Segoe UI', Roboto, Arial, sans-serif;
@@ -62,6 +63,7 @@
   --radius-14:14px;
   --radius-18:18px;
   --radius-20:20px;
+  --radius-24:24px;
   --radius-round:50%;
 
   /* ===== Space ===== */
@@ -81,10 +83,29 @@
   --space-20:20px;
   --space-22:22px;
   --space-24:24px;
+  --space-28:28px;
   --space-36:36px;
   --space-48:48px;
   --space-56:56px;
+  --space-64:64px;
   --space-100:100px;
+
+  /* ===== Size ===== */
+  --size-icon:20px;
+  --size-touch-target:44px;
+  --size-dock:64px;
+  --size-sheet-max:52dvh;
+  --size-sheet-landscape:340px;
+
+  /* ===== Breakpoint ===== */
+  --breakpoint-mobile:768px;
+  --breakpoint-landscape-height:500px;
+
+  /* ===== Z Index ===== */
+  --z-index-pane-label:3;
+  --z-index-overlay:5;
+  --z-index-panel:6;
+  --z-index-dock:8;
 
   /* ===== Blur ===== */
   --blur-10:10px;
@@ -102,7 +123,12 @@
   --duration-fast:0.15s;
   --duration-base:0.18s;
   --duration-slow:0.5s;
+  --duration-sheet:0.28s;
 
   /* ===== Shadow ===== */
   --shadow-panel:0 20px 60px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06);
+  --shadow-sheet:0 -12px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
+
+  /* ===== Easing ===== */
+  --easing-standard:cubic-bezier(0.2,0.8,0.2,1);
 }

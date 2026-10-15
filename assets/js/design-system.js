@@ -96,6 +96,11 @@
       var track = h('div', 'ds-bar-track'); var bar = h('div', 'ds-bar');
       bar.style.width = 'var(' + t.cssVar + ')'; track.appendChild(bar); return track;
     } },
+    'size': { layout: 'list', preview: function (t) {
+      if (/dvh|vh/.test(css.getPropertyValue(t.cssVar))) return null;
+      var track = h('div', 'ds-bar-track'); var bar = h('div', 'ds-bar');
+      bar.style.width = 'var(' + t.cssVar + ')'; track.appendChild(bar); return track;
+    } },
     'radius': { layout: 'grid', preview: function (t) {
       var r = h('div', 'ds-radius'); r.style.borderRadius = 'var(' + t.cssVar + ')'; return r;
     } },

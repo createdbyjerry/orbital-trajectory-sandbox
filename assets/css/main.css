@@ -2,6 +2,12 @@
  * Orbital Trajectory Sandbox — prototype styles.
  * All design values come from tokens.css (generated from tokens/tokens.json).
  * Load order: tokens.css -> loader.css -> main.css
+ *
+ * Two layouts:
+ *   Desktop  — three panes (overview, ground track, 3D) with floating glass panels.
+ *   Mobile   — two panes (ground track, 3D), an icon dock, and one bottom sheet at a time.
+ *              Breakpoint = --breakpoint-mobile / --breakpoint-landscape-height (see the
+ *              "mobile" block at the bottom; main.js reads the same tokens).
  */
 
 *{box-sizing:border-box;}
@@ -21,7 +27,7 @@ canvas{display:block;}
 /* Pane labels: positioned so they never sit under the floating panels.
    Top-left pane -> label bottom-right. Top-right pane -> label bottom-left.
    Bottom (full-width) pane -> label top-center. */
-.pane-label{position:absolute;z-index:3;background:var(--color-glass-strong);
+.pane-label{position:absolute;z-index:var(--z-index-pane-label);background:var(--color-glass-strong);
   border:var(--border-width-1) solid var(--color-line);border-radius:var(--radius-20);
   padding:var(--space-4) var(--space-12);font-size:var(--font-size-10-5);letter-spacing:var(--letter-spacing-0-8);
   text-transform:uppercase;backdrop-filter:blur(var(--blur-10));color:var(--color-text);}
@@ -35,7 +41,7 @@ canvas{display:block;}
   border:var(--border-width-1) solid var(--color-line);border-radius:var(--radius-18);
   backdrop-filter:blur(var(--blur-22)) saturate(var(--saturate-panel));-webkit-backdrop-filter:blur(var(--blur-22)) saturate(var(--saturate-panel));
   box-shadow:var(--shadow-panel);
-  z-index:6;max-height:calc(100vh - var(--space-48));
+  z-index:var(--z-index-panel);max-height:calc(100vh - var(--space-48));
 }
 #panelElements{top:var(--space-24);left:var(--space-24);width:330px;max-width:88vw;padding:var(--space-16) var(--space-4) var(--space-16) var(--space-18);}
 #panelSim{bottom:var(--space-24);left:var(--space-24);width:250px;max-width:70vw;overflow-y:auto;}
@@ -75,7 +81,7 @@ h1{font-size:var(--font-size-16);margin:0 0 var(--space-14);color:var(--color-te
 .ctrl label{display:flex;justify-content:space-between;font-size:var(--font-size-12-5);color:var(--color-text);margin-bottom:var(--space-4);}
 .ctrl label .val{color:var(--color-text);font-weight:var(--font-weight-semibold);font-variant-numeric:tabular-nums;}
 .ctrl label .lbl{display:flex;align-items:center;}
-.info{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;
+.info{display:inline-flex;user-select:none;align-items:center;justify-content:center;width:13px;height:13px;
   border-radius:var(--radius-round);border:var(--border-width-1) solid var(--color-line-strong);font-size:var(--font-size-9);color:var(--color-muted);
   cursor:help;margin-left:var(--space-5);flex-shrink:0;}
 input[type=range]{width:100%;accent-color:var(--color-white);height:3px;}
@@ -115,10 +121,136 @@ footer a{color:inherit;}
 
 /* ---------- overlays ---------- */
 #banner{
-  position:absolute;top:var(--space-24);right:var(--space-24);z-index:5;background:var(--color-glass-strong);
+  position:absolute;top:var(--space-24);right:var(--space-24);z-index:var(--z-index-overlay);background:var(--color-glass-strong);
   border:var(--border-width-1) solid var(--color-line);border-radius:var(--radius-12);padding:var(--space-8) var(--space-14);font-size:var(--font-size-12);color:var(--color-text);
   max-width:340px;backdrop-filter:blur(var(--blur-16));display:none;
 }
-#hud{position:absolute;bottom:var(--space-24);left:50%;transform:translateX(-50%);z-index:5;font-size:var(--font-size-11);color:var(--color-muted);
+#hud{position:absolute;bottom:var(--space-24);left:50%;transform:translateX(-50%);z-index:var(--z-index-overlay);font-size:var(--font-size-11);color:var(--color-muted);
   background:var(--color-glass-faint);border:var(--border-width-1) solid var(--color-line);padding:var(--space-6) var(--space-10);border-radius:var(--radius-8);
   backdrop-filter:blur(var(--blur-16));}
+.hud-touch{display:none;}
+
+/* ---------- icon dock (mobile only) ---------- */
+#dock{display:none;}
+.dock-btn{
+  flex:1;min-width:0;min-height:var(--size-touch-target);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-4);
+  padding:var(--space-6) var(--space-2);border:var(--border-width-1) solid transparent;border-radius:var(--radius-12);
+  background:transparent;color:var(--color-muted);font-size:var(--font-size-10);letter-spacing:var(--letter-spacing-0-5);
+  -webkit-tap-highlight-color:transparent;transition:color var(--duration-sheet) var(--easing-standard),background var(--duration-sheet) var(--easing-standard),border-color var(--duration-sheet) var(--easing-standard);
+}
+.dock-btn:hover{background:var(--color-glass-strong);border-color:transparent;color:var(--color-text);}
+.dock-btn[aria-expanded="true"]{background:var(--color-glass-hover);border-color:var(--color-line);color:var(--color-white);}
+.dock-btn:focus-visible{outline:var(--border-width-1-5) solid var(--color-white);outline-offset:-2px;}
+.dock-icon{width:var(--size-icon);height:var(--size-icon);fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+.dock-icon .knob,.dock-icon .fill{fill:currentColor;}
+.dock-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;line-height:var(--line-height-1-3);}
+
+/* =====================================================================
+   MOBILE — keep both queries in sync with --breakpoint-mobile (768px)
+   and --breakpoint-landscape-height (500px) in tokens/tokens.json.
+   ===================================================================== */
+@media (max-width:768px), (pointer:coarse) and (max-height:500px){
+  #app{width:100%;height:100vh;height:100dvh;}
+
+  /* two views: ground track (2:1, top) + 3D view (fills the rest). Overview pane is dropped. */
+  #grid{inset:0 0 calc(var(--size-dock) + env(safe-area-inset-bottom)) 0;padding-top:env(safe-area-inset-top);
+    grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);}
+  #paneMain{display:none;}
+  #paneTrack{grid-column:1;grid-row:1;aspect-ratio:2 / 1;}
+  #paneOverview{grid-column:1;grid-row:2;}
+  #paneTrack .pane-label,#paneOverview .pane-label{top:var(--space-8);left:var(--space-8);bottom:auto;right:auto;transform:none;
+    padding:var(--space-3) var(--space-10);font-size:var(--font-size-10);}
+  #canvas-container{touch-action:none;}
+
+  /* dock */
+  #dock{
+    display:flex;gap:var(--space-2);position:fixed;left:0;right:0;bottom:0;z-index:var(--z-index-dock);
+    height:calc(var(--size-dock) + env(safe-area-inset-bottom));
+    padding:var(--space-6) calc(var(--space-6) + env(safe-area-inset-right)) calc(var(--space-6) + env(safe-area-inset-bottom)) calc(var(--space-6) + env(safe-area-inset-left));
+    background:var(--color-glass-solid);border-top:var(--border-width-1) solid var(--color-line);
+    backdrop-filter:blur(var(--blur-22)) saturate(var(--saturate-panel));-webkit-backdrop-filter:blur(var(--blur-22)) saturate(var(--saturate-panel));
+  }
+
+  /* every container collapses; the dock opens one at a time as a bottom sheet
+     (ID selectors so these beat the desktop #panel… positioning) */
+  #panelElements,#panelSim,#panelTelemetry{
+    display:none;position:fixed;top:auto;left:0;right:0;bottom:calc(var(--size-dock) + env(safe-area-inset-bottom));
+    width:auto;max-width:none;max-height:var(--size-sheet-max);overflow-y:auto;overscroll-behavior:contain;
+    padding:0;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);
+    background:var(--color-glass-solid);border-bottom:none;border-radius:var(--radius-24) var(--radius-24) 0 0;
+    box-shadow:var(--shadow-sheet);
+  }
+  #app[data-sheet="presets"] #panelElements,
+  #app[data-sheet="elements"] #panelElements,
+  #app[data-sheet="how"] #panelElements,
+  #app[data-sheet="sim"] #panelSim,
+  #app[data-sheet="telemetry"] #panelTelemetry{display:block;animation:sheet-in var(--duration-sheet) var(--easing-standard);}
+
+  #panelElements .panel-scroll{height:auto;overflow:visible;padding:0;}
+  #panelElements h1{display:none;}
+  #panelElements .section{display:none;border-top:none;padding:0;}
+  #app[data-sheet="presets"] #secPresets,
+  #app[data-sheet="elements"] #secElements,
+  #app[data-sheet="how"] #secHow{display:block;}
+  #panelElements footer{display:none;}
+  #app[data-sheet="how"] #panelElements footer{display:block;margin:0;padding:0 var(--space-20) var(--space-20);}
+
+  /* sheet header = the section/panel summary: grab handle + close button, tap to collapse */
+  .section > summary,.panel-title{
+    position:sticky;top:0;z-index:1;padding:var(--space-20) var(--space-20) var(--space-12);
+    font-size:var(--font-size-11);letter-spacing:var(--letter-spacing-1-5);
+    background:var(--color-glass-solid);border-bottom:var(--border-width-1) solid var(--color-line);
+  }
+  .section > summary::before,.panel-title::before{content:'';position:absolute;top:var(--space-7);left:50%;transform:translateX(-50%);
+    width:var(--space-36);height:var(--space-4);border-radius:var(--radius-20);background:var(--color-line);}
+  .section > summary::after,.panel-title::after,
+  .section[open] > summary::after,details[open] > .panel-title::after{
+    content:'\00d7';transform:none;width:var(--space-28);height:var(--space-28);border:var(--border-width-1) solid var(--color-line);
+    border-radius:var(--radius-round);display:flex;align-items:center;justify-content:center;
+    font-size:var(--font-size-16);letter-spacing:0;line-height:1;color:var(--color-text);background:var(--color-glass-strong);
+  }
+  .section .body,.panel-body{padding:var(--space-14) var(--space-20) var(--space-20);}
+
+  /* touch sizing */
+  button{min-height:var(--size-touch-target);font-size:var(--font-size-13);}
+  .preset-grid{gap:var(--space-8);}
+  .preset-grid button{font-size:var(--font-size-12);}
+  .ctrl{margin-bottom:var(--space-12);}
+  .ctrl label{font-size:var(--font-size-13);}
+  input[type=range]{height:var(--space-28);margin:0;}
+  .info{width:18px;height:18px;font-size:var(--font-size-10);}
+  .toggles label{min-height:var(--size-touch-target);margin:0;font-size:var(--font-size-13);}
+  .toggles input{width:18px;height:18px;accent-color:var(--color-white);}
+  .tele-row{font-size:var(--font-size-13);padding:var(--space-8) 0;}
+  #howItWorks{font-size:var(--font-size-13);line-height:var(--line-height-1-6);}
+
+  /* overlays: banner sits just under the ground track, HUD just above the dock */
+  #banner{top:calc(env(safe-area-inset-top) + 50vw + var(--space-48));left:var(--space-12);right:var(--space-12);max-width:none;text-align:center;}
+  #hud{bottom:calc(var(--size-dock) + env(safe-area-inset-bottom) + var(--space-12));white-space:nowrap;transition:opacity var(--duration-base);}
+  .hud-pointer{display:none;}
+  .hud-touch{display:inline;}
+  #app[data-sheet] #hud{opacity:0;pointer-events:none;}
+}
+
+/* phones in landscape: views side by side, dock becomes a vertical rail on the right */
+@media (pointer:coarse) and (max-height:500px) and (orientation:landscape){
+  #grid{inset:0 calc(var(--size-dock) + env(safe-area-inset-right)) 0 0;padding:env(safe-area-inset-top) 0 0 env(safe-area-inset-left);
+    grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);grid-template-rows:minmax(0,1fr);}
+  #paneTrack{aspect-ratio:auto;}
+  #paneOverview{grid-column:2;grid-row:1;}
+  #dock{flex-direction:column;top:0;left:auto;width:calc(var(--size-dock) + env(safe-area-inset-right));height:auto;
+    padding:var(--space-6) calc(var(--space-6) + env(safe-area-inset-right)) var(--space-6) var(--space-6);
+    border-top:none;border-left:var(--border-width-1) solid var(--color-line);}
+  .dock-label{display:none;}
+  #panelElements,#panelSim,#panelTelemetry{left:auto;top:var(--space-8);bottom:var(--space-8);right:calc(var(--size-dock) + env(safe-area-inset-right));
+    width:var(--size-sheet-landscape);max-height:none;border-bottom:var(--border-width-1) solid var(--color-line);
+    border-radius:var(--radius-24) 0 0 var(--radius-24);padding-right:0;}
+  #banner{top:var(--space-12);left:auto;right:calc(var(--size-dock) + var(--space-12));max-width:300px;}
+  #hud{bottom:var(--space-12);}
+}
+
+@keyframes sheet-in{from{opacity:0;transform:translateY(var(--space-16));}to{opacity:1;transform:none;}}
+@media (prefers-reduced-motion:reduce){
+  .float-panel{animation:none !important;}
+}
